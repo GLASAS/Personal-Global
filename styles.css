@@ -21,7 +21,7 @@ body {
     scrollbar-width: none;
 }
 
-/* Ajustes para inputs en iOS para evitar zoom automático al hacer clic */
+/* Prevenir zoom automático en inputs en iOS y Android */
 @media screen and (max-width: 768px) {
     input, select, textarea {
         font-size: 16px !important;
