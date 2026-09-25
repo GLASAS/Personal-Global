@@ -2,13 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard General de Personal - Talento Humano</title>
     
     <!-- CONFIGURACIÓN DE ICONOS PARA MÓVILES Y PWA -->
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1Z8zWfdiK3-gM2HyuCeI-u-vAfxsCgeej">
     <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1Z8zWfdiK3-gM2HyuCeI-u-vAfxsCgeej">
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Talento%20Humano%22%2C%22short_name%22%3A%22Talento%20Humano%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%230f172a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Flh3.googleusercontent.com%2Fd%2F1Z8zWfdiK3-gM2HyuCeI-u-vAfxsCgeej%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Talento Humano">
@@ -22,15 +21,10 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
+    <!-- Estilos externos -->
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body class="text-slate-800 antialiased">
+<body class="text-slate-800 antialiased selection:bg-indigo-500 selection:text-white">
 
     <!-- PANTALLA DE LOGIN -->
     <div id="loginScreen" class="fixed inset-0 bg-slate-900 z-50 flex flex-col justify-center items-center p-4">
@@ -67,7 +61,7 @@
         </div>
     </div>
 
-    <!-- MODAL OBLIGATORIO DE CAMBIO DE CONTRASEÑA (SI ES 123456) -->
+    <!-- MODAL OBLIGATORIO DE CAMBIO DE CONTRASEÑA -->
     <div id="forcedPassModal" class="fixed inset-0 bg-slate-900 z-50 flex justify-center items-center p-4 hidden">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 space-y-5 border border-slate-100">
             <div class="text-center space-y-1">
@@ -167,12 +161,11 @@
                 <button onclick="cerrarSesion()" class="text-[10px] bg-rose-600/80 hover:bg-rose-600 text-white px-2 py-1 rounded-md font-medium transition">Salir</button>
             </div>
         </div>
-        
         <div id="mobileNavTabs" class="flex gap-2 overflow-x-auto no-scrollbar pb-1"></div>
     </div>
 
     <!-- Contenedor principal -->
-    <div id="mainAppContainer" class="flex h-screen overflow-hidden pt-0 md:pt-0 hidden">
+    <div id="mainAppContainer" class="flex h-screen overflow-hidden pt-24 md:pt-0 hidden">
         <!-- Sidebar (Escritorio) -->
         <aside class="w-64 bg-slate-900 text-slate-300 hidden md:flex flex-col justify-between">
             <div class="p-6">
@@ -341,7 +334,7 @@
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
                                 <h3 class="font-bold text-slate-800 text-base">Ficha Detallada del Funcionario</h3>
-                                <p class="text-xs text-slate-500">Busca por número de cédula o por cualquier parte del nombre (ej. iniciales o apellidos) para ver toda la ficha en formato de cuadros.</p>
+                                <p class="text-xs text-slate-500">Busca por número de cédula o parte del nombre.</p>
                             </div>
                             <div class="flex items-center gap-2 w-full md:w-auto">
                                 <input type="text" id="searchInfoInput" placeholder="Cédula o parte del nombre..." class="text-sm border border-slate-300 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none w-full md:w-80" onkeydown="if(event.key === 'Enter') buscarInformacionPersonal()">
@@ -351,10 +344,9 @@
                             </div>
                         </div>
                     </div>
-
                     <div id="infoPersonalResultContainer" class="space-y-6">
                         <div class="bg-white p-12 rounded-xl border border-slate-200 shadow-sm text-center text-slate-400">
-                            Por favor ingresa una cédula o nombre en el buscador superior y presiona Buscar para ver la ficha completa.
+                            Por favor ingresa una cédula o nombre y presiona Buscar.
                         </div>
                     </div>
                 </div>
@@ -365,11 +357,10 @@
                         <div class="flex flex-wrap justify-between items-center gap-4">
                             <div>
                                 <h3 class="font-bold text-slate-800 text-base">Informe de Necesidad - Personal Pendiente (P_PEND)</h3>
-                                <p class="text-xs text-slate-500 mt-0.5">Filtra por área o alterna la vista para incluir o excluir el desglose por ciudad.</p>
                             </div>
                             <div class="flex items-center gap-3 flex-wrap">
                                 <div class="w-48">
-                                    <select id="filterPendArea" onchange="renderPendientesTable()" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white font-medium text-slate-700">
+                                    <select id="filterPendArea" onchange="renderPendientesTable()" class="w-full text-xs border border-slate-300 rounded-lg px-3 py-2 bg-white font-medium text-slate-700">
                                         <option value="">Todas las Áreas</option>
                                     </select>
                                 </div>
@@ -378,19 +369,16 @@
                                     <button id="btnModoConCiudad" onclick="cambiarModoCiudad(true)" class="px-3 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900">Con Ciudad</button>
                                 </div>
                                 <span id="pendTotalBadge" class="text-xs bg-indigo-50 text-indigo-700 px-3 py-2 rounded-lg font-bold border border-indigo-100">Total General: 0</span>
-                                <button onclick="exportarPendientesExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium px-3.5 py-2 rounded-lg transition shadow-sm flex items-center gap-1.5">
-                                    📊 Exportar Tabla a Excel
-                                </button>
+                                <button onclick="exportarPendientesExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium px-3.5 py-2 rounded-lg transition shadow-sm">📊 Exportar Excel</button>
                             </div>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                         <div class="overflow-x-auto max-h-[600px]">
                             <table class="w-full text-left border-collapse sticky top-0">
                                 <thead id="pendTableHead" class="bg-slate-900 text-white text-xs font-semibold uppercase tracking-wider"></thead>
                                 <tbody id="pendTableBody" class="divide-y divide-slate-200 text-xs text-slate-700">
-                                    <tr><td colspan="2" class="px-6 py-8 text-center text-slate-400">Cargando datos de P_PEND...</td></tr>
+                                    <tr><td colspan="2" class="px-6 py-8 text-center text-slate-400">Cargando datos...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -405,9 +393,7 @@
                                 <h3 class="font-semibold text-slate-800 text-sm">Listado General (Personal Activo)</h3>
                                 <span id="tableCount" class="text-xs text-slate-500 font-medium">Mostrando 0 registros</span>
                             </div>
-                            <button onclick="exportarListadoGeneralExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium px-4 py-2 rounded-lg transition shadow-sm">
-                                📊 Exportar Listado General a Excel
-                            </button>
+                            <button onclick="exportarListadoGeneralExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium px-4 py-2 rounded-lg transition shadow-sm">📊 Exportar a Excel</button>
                         </div>
                         <div class="overflow-x-auto max-h-[600px]">
                             <table class="w-full text-left border-collapse sticky top-0">
@@ -435,58 +421,46 @@
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                             <div>
                                 <label class="block text-xs font-medium text-slate-600 mb-1">Fecha Desde</label>
-                                <input type="date" id="exportStart" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <input type="date" id="exportStart" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2">
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-slate-600 mb-1">Fecha Hasta</label>
-                                <input type="date" id="exportEnd" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <input type="date" id="exportEnd" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2">
                             </div>
                             <div>
-                                <label class="block text-xs font-medium text-slate-600 mb-1">Filtrar por Área</label>
-                                <select id="exportArea" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
-                                    <option value="">Todas las áreas</option>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">Área</label>
+                                <select id="exportArea" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 bg-white">
+                                    <option value="">Todas</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-medium text-slate-600 mb-1">Filtrar por Cargo</label>
-                                <select id="exportCargo" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
-                                    <option value="">Todos los cargos</option>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">Cargo</label>
+                                <select id="exportCargo" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 bg-white">
+                                    <option value="">Todos</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="pt-2">
-                            <button onclick="previsualizarExportacion()" class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm py-2 px-6 rounded-lg transition shadow-sm">
-                                👁️ Consultar / Previsualizar Listado
-                            </button>
-                        </div>
+                        <button onclick="previsualizarExportacion()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm py-2 px-6 rounded-lg transition shadow-sm">👁️ Consultar</button>
                     </div>
-
                     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden space-y-4 p-6">
                         <div class="flex justify-between items-center border-b border-slate-200 pb-4">
-                            <div>
-                                <h3 class="font-semibold text-slate-800 text-sm">Vista Previa de Registros a Contratación</h3>
-                                <span id="previewCount" class="text-xs text-slate-500 font-medium">0 registros</span>
-                            </div>
-                            <button id="btnRealizarExport" onclick="ejecutarExportacionCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs px-4 py-2 rounded-lg transition shadow-sm opacity-50 cursor-not-allowed" disabled>
-                                📥 Descargar Excel Profesional
-                            </button>
+                            <span id="previewCount" class="text-xs text-slate-500 font-medium">0 registros</span>
+                            <button id="btnRealizarExport" onclick="ejecutarExportacionCSV()" class="bg-emerald-600 text-white text-xs font-medium px-4 py-2 rounded-lg opacity-50 cursor-not-allowed" disabled>📥 Descargar Excel</button>
                         </div>
                         <div class="overflow-x-auto max-h-[400px]">
                             <table class="w-full text-left border-collapse">
                                 <thead class="bg-slate-50 text-slate-600 text-xs font-semibold uppercase border-b border-slate-200">
                                     <tr>
                                         <th class="px-4 py-2">Documento</th>
-                                        <th class="px-4 py-2">Nombre Completo</th>
+                                        <th class="px-4 py-2">Nombre</th>
                                         <th class="px-4 py-2">Cargo</th>
                                         <th class="px-4 py-2">Área</th>
                                         <th class="px-4 py-2">Ciudad</th>
-                                        <th class="px-4 py-2">Fecha Ingreso</th>
+                                        <th class="px-4 py-2">Ingreso</th>
                                         <th class="px-4 py-2">Estado</th>
                                     </tr>
                                 </thead>
-                                <tbody id="previewTableBody" class="divide-y divide-slate-200 text-xs text-slate-700">
-                                    <tr><td colspan="7" class="px-4 py-6 text-center text-slate-400">Haz clic en consultar para ver los datos.</td></tr>
-                                </tbody>
+                                <tbody id="previewTableBody" class="divide-y divide-slate-200 text-xs text-slate-700"></tbody>
                             </table>
                         </div>
                         <div id="exportStatus" class="text-xs font-medium text-slate-600"></div>
@@ -496,50 +470,40 @@
                 <!-- MÓDULO DE RETIROS -->
                 <div id="content-retiros" class="tab-content space-y-6">
                     <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
-                        <h3 class="font-semibold text-slate-800 text-sm">Módulo de Retiros (Filtrar por Rango de Fecha de Retiro)</h3>
+                        <h3 class="font-semibold text-slate-800 text-sm">Módulo de Retiros</h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                             <div>
-                                <label class="block text-xs font-medium text-slate-600 mb-1">Fecha Desde (Retiro)</label>
-                                <input type="date" id="retStart" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <label class="block text-xs font-medium text-slate-600 mb-1">Fecha Desde</label>
+                                <input type="date" id="retStart" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2">
                             </div>
                             <div>
-                                <label class="block text-xs font-medium text-slate-600 mb-1">Fecha Hasta (Retiro)</label>
-                                <input type="date" id="retEnd" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <label class="block text-xs font-medium text-slate-600 mb-1">Fecha Hasta</label>
+                                <input type="date" id="retEnd" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2">
                             </div>
-                            <div>
-                                <button onclick="buscarRetiros()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-medium text-sm py-2 px-4 rounded-lg transition shadow-sm">
-                                    🔍 Consultar Retiros
-                                </button>
-                            </div>
+                            <button onclick="buscarRetiros()" class="bg-rose-600 hover:bg-rose-700 text-white font-medium text-sm py-2 px-4 rounded-lg transition">🔍 Consultar Retiros</button>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                        <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center flex-wrap gap-2">
-                            <div>
-                                <h3 class="font-semibold text-slate-800 text-sm">Listado de Personal Retirado</h3>
-                                <span id="retCount" class="text-xs text-slate-500 font-medium">0 registros encontrados</span>
-                            </div>
-                            <button onclick="exportarRetirosExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition shadow-sm">📊 Descargar Excel Profesional de Retiros</button>
+                        <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                            <span id="retCount" class="text-xs text-slate-500 font-medium">0 registros</span>
+                            <button onclick="exportarRetirosExcel()" class="bg-emerald-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg">📊 Descargar Excel</button>
                         </div>
                         <div class="overflow-x-auto max-h-[500px]">
-                            <table class="w-full text-left border-collapse sticky top-0">
+                            <table class="w-full text-left border-collapse">
                                 <thead class="bg-slate-50 text-slate-600 text-xs font-semibold uppercase border-b border-slate-200">
                                     <tr>
                                         <th class="px-6 py-3">Documento</th>
-                                        <th class="px-6 py-3">Nombre Completo</th>
+                                        <th class="px-6 py-3">Nombre</th>
                                         <th class="px-6 py-3">Cargo</th>
                                         <th class="px-6 py-3">Área</th>
                                         <th class="px-6 py-3">Ciudad</th>
-                                        <th class="px-6 py-3">Fecha Ingreso</th>
-                                        <th class="px-6 py-3">Fecha Renuncia (Retiro)</th>
-                                        <th class="px-6 py-3">Observación Renuncia</th>
+                                        <th class="px-6 py-3">Ingreso</th>
+                                        <th class="px-6 py-3">Retiro</th>
+                                        <th class="px-6 py-3">Observación</th>
                                         <th class="px-6 py-3">Estado</th>
                                     </tr>
                                 </thead>
-                                <tbody id="retTableBody" class="divide-y divide-slate-200 text-xs text-slate-700">
-                                    <tr><td colspan="9" class="px-6 py-6 text-center text-slate-400">Selecciona un rango de fechas y haz clic en Consultar.</td></tr>
-                                </tbody>
+                                <tbody id="retTableBody" class="divide-y divide-slate-200 text-xs text-slate-700"></tbody>
                             </table>
                         </div>
                     </div>
@@ -548,42 +512,35 @@
                 <!-- CUMPLEAÑOS -->
                 <div id="content-birthdays" class="tab-content space-y-6">
                     <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
-                        <h3 class="font-semibold text-slate-800 text-sm">Filtro por Fecha de Nacimiento (Cumpleaños)</h3>
+                        <h3 class="font-semibold text-slate-800 text-sm">Filtro de Cumpleaños</h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                             <div>
                                 <label class="block text-xs font-medium text-slate-600 mb-1">Fecha Desde</label>
-                                <input type="date" id="bDayStart" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <input type="date" id="bDayStart" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2">
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-slate-600 mb-1">Fecha Hasta</label>
-                                <input type="date" id="bDayEnd" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <input type="date" id="bDayEnd" class="w-full text-sm border border-slate-300 rounded-lg px-3 py-2">
                             </div>
-                            <div>
-                                <button onclick="buscarCumpleanos()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm py-2 px-4 rounded-lg transition shadow-sm">
-                                    🔍 Consultar Cumpleaños
-                                </button>
-                            </div>
+                            <button onclick="buscarCumpleanos()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm py-2 px-4 rounded-lg">🔍 Consultar</button>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                         <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                            <h3 class="font-semibold text-slate-800 text-sm">Listado de Cumpleaños</h3>
-                            <button onclick="exportarCumpleanosExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition shadow-sm">📊 Descargar Excel Profesional</button>
+                            <span class="text-xs text-slate-500 font-medium">Listado</span>
+                            <button onclick="exportarCumpleanosExcel()" class="bg-emerald-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg">📊 Descargar Excel</button>
                         </div>
                         <div class="overflow-x-auto max-h-[500px]">
-                            <table class="w-full text-left border-collapse sticky top-0">
+                            <table class="w-full text-left border-collapse">
                                 <thead class="bg-slate-50 text-slate-600 text-xs font-semibold uppercase border-b border-slate-200">
                                     <tr>
-                                        <th class="px-6 py-3">Nombre Completo</th>
+                                        <th class="px-6 py-3">Nombre</th>
                                         <th class="px-6 py-3">Fecha Nacimiento</th>
                                         <th class="px-6 py-3">Cargo</th>
                                         <th class="px-6 py-3">Área</th>
                                     </tr>
                                 </thead>
-                                <tbody id="bDayTableBody" class="divide-y divide-slate-200 text-xs text-slate-700">
-                                    <tr><td colspan="4" class="px-6 py-6 text-center text-slate-400">Selecciona un rango y haz clic en Consultar.</td></tr>
-                                </tbody>
+                                <tbody id="bDayTableBody" class="divide-y divide-slate-200 text-xs text-slate-700"></tbody>
                             </table>
                         </div>
                     </div>
@@ -593,1537 +550,7 @@
         </main>
     </div>
 
-    <script>
-        const sheetID = '1pCFrPSBBh3yxhiBE13GXHUyHADCWH9IG01Wkk7hs-mU';
-        const appsScriptURL = 'https://script.google.com/macros/s/AKfycbwXoixFi07-aesobxOfS6Fq5HX4SqnLyYZdxXjTTHDwxrUYNiqIlgF-OxPHTknpcusi/exec';
-
-        let rawData = [];
-        let rawObjectsFull = []; 
-        let pendData = [];
-        let mostrarConCiudad = false;
-        let permisosActuales = {};
-        let currentDynamicFiltered = [];
-        let currentExportFiltered = [];
-        let currentBDayFiltered = [];
-        let currentRetFiltered = [];
-        let chartEvolucionMesInstance = null;
-        let chartCargosMesInstance = null;
-        let chartTipoContratoInstance = null;
-        let chartCargosPorAreaInstance = null;
-
-        const tabMapping = [
-            { id: 'dashboard', name: 'Vista General', icon: '📊', possibleCols: ['VISTA GENERAL', 'VISTAGENERAL'] },
-            { id: 'filters', name: 'Filtro Personal', icon: '🔍', possibleCols: ['FILTRO PERSONAL', 'FILTROS DINAMICOS', 'FILTROS DINÁMICOS', 'FILTROS'] },
-            { id: 'info-personal', name: 'Información Personal', icon: '📇', possibleCols: ['INF_PERSONAL', 'INFORMACION PERSONAL', 'INFORMACIÓN PERSONAL', 'INFO PERSONAL'] },
-            { id: 'pendientes', name: 'Personal Pendiente', icon: '📈', possibleCols: ['PERSONAL PENDIENTE', 'PENDIENTES', 'P_PEND', 'VISTAGENERAL'] },
-            { id: 'table', name: 'Listado General', icon: '📋', possibleCols: ['LISTADO GENERAL', 'LISTADOGENERAL'] },
-            { id: 'export', name: 'Módulo de Contratación', icon: '📥', possibleCols: ['MODULO CONTRATACION', 'MODULO CONTRATACIÓN', 'MODULO EXPORTACION', 'MODULO EXPORTACIÓN', 'EXPORTAR', 'EXPORTACIÓN'] },
-            { id: 'retiros', name: 'Módulo de Retiros', icon: '🚪', possibleCols: ['RETIROS', 'PERSONAL RETIRADO', 'RETIRADOS'] },
-            { id: 'birthdays', name: 'Cumpleaños', icon: '🎂', possibleCols: ['CUMPLEAÑOS', 'CUMPLEANOS'] }
-        ];
-
-        window.onload = () => {
-            const savedUser = localStorage.getItem('th_user');
-            const savedPass = localStorage.getItem('th_pass');
-            
-            if (savedUser && savedPass) {
-                document.getElementById('loginUser').value = savedUser;
-                document.getElementById('loginPass').value = savedPass;
-                document.getElementById('rememberMe').checked = true;
-                intentarLogin(true);
-            }
-        };
-
-        function intentarLogin(isAuto = false) {
-            const userIn = document.getElementById('loginUser').value.trim();
-            const passIn = document.getElementById('loginPass').value.trim();
-            const remember = document.getElementById('rememberMe').checked;
-            const errDiv = document.getElementById('loginError');
-
-            if(!userIn || !passIn) {
-                if(!isAuto) {
-                    errDiv.textContent = "Por favor ingresa usuario y contraseña.";
-                    errDiv.classList.remove('hidden');
-                }
-                return;
-            }
-
-            errDiv.classList.add('hidden');
-            document.getElementById('loadingOverlay').classList.remove('hidden');
-
-            const jsonpURL = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=Usuarios&tqx=responseHandler:handleLoginData`;
-            const script = document.createElement('script');
-            script.src = jsonpURL;
-            script.onerror = function() {
-                document.getElementById('loadingOverlay').classList.add('hidden');
-                if(!isAuto) {
-                    errDiv.textContent = "Error al conectar con la pestaña Usuarios.";
-                    errDiv.classList.remove('hidden');
-                } else {
-                    localStorage.removeItem('th_user');
-                    localStorage.removeItem('th_pass');
-                }
-            };
-
-            window.handleLoginData = function(response) {
-                try {
-                    if (!response || !response.table) throw new Error("Estructura no válida.");
-                    const cols = response.table.cols.map(col => col ? (col.label || '').trim().toUpperCase() : '');
-                    const rows = response.table.rows;
-
-                    let usuariosList = rows.map(row => {
-                        let obj = {};
-                        if (row && row.c) {
-                            row.c.forEach((cell, index) => {
-                                let colName = cols[index];
-                                if (colName) {
-                                    let val = cell ? (cell.f !== undefined && cell.f !== null ? cell.f : (cell.v !== undefined && cell.v !== null ? cell.v : '')) : '';
-                                    obj[colName.trim().toUpperCase()] = String(val).trim();
-                                    let cleanKey = colName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toUpperCase();
-                                    obj[cleanKey] = String(val).trim();
-                                }
-                            });
-                        }
-                        return obj;
-                    });
-
-                    let usuarioEncontrado = usuariosList.find(u => {
-                        let uSheet = (u['USUARIO'] || '').trim().toLowerCase();
-                        let pSheet = String(u['CONTRASEÑA'] || u['CONTRASENA'] || '').trim();
-                        return uSheet === userIn.toLowerCase() && pSheet === passIn;
-                    });
-
-                    if(!usuarioEncontrado) {
-                        document.getElementById('loadingOverlay').classList.add('hidden');
-                        if(isAuto) {
-                            localStorage.removeItem('th_user');
-                            localStorage.removeItem('th_pass');
-                            return;
-                        }
-                        errDiv.textContent = "Usuario o contraseña incorrectos.";
-                        errDiv.classList.remove('hidden');
-                        return;
-                    }
-
-                    permisosActuales = usuarioEncontrado;
-                    let passActualEnHoja = String(permisosActuales['CONTRASEÑA'] || permisosActuales['CONTRASENA'] || '').trim();
-
-                    if (passActualEnHoja === '123456') {
-                        document.getElementById('loadingOverlay').classList.add('hidden');
-                        document.getElementById('forcedNewPass').value = '';
-                        document.getElementById('forcedConfirmPass').value = '';
-                        document.getElementById('forcedPassMsg').classList.add('hidden');
-                        document.getElementById('forcedPassModal').classList.remove('hidden');
-                        return;
-                    }
-
-                    if (remember) {
-                        localStorage.setItem('th_user', userIn);
-                        localStorage.setItem('th_pass', passIn);
-                    } else {
-                        localStorage.removeItem('th_user');
-                        localStorage.removeItem('th_pass');
-                    }
-                    
-                    document.getElementById('loginScreen').classList.add('hidden');
-                    document.getElementById('mobileHeader').classList.remove('hidden');
-                    document.getElementById('mainAppContainer').classList.remove('hidden');
-                    
-                    document.getElementById('mobileSessionUser').textContent = usuarioEncontrado['USUARIO'];
-                    document.getElementById('desktopSessionUser').textContent = `Sesión: ${usuarioEncontrado['USUARIO']}`;
-
-                    construirNavegacionPermisos();
-                    fetchPersonalData();
-                    fetchPendData();
-
-                } catch (e) {
-                    console.error(e);
-                    document.getElementById('loadingOverlay').classList.add('hidden');
-                    if(!isAuto) {
-                        errDiv.textContent = "Error al procesar los permisos de usuario.";
-                        errDiv.classList.remove('hidden');
-                    }
-                }
-            };
-            document.head.appendChild(script);
-        }
-
-        function procesarCambioObligatorio() {
-            const newP = document.getElementById('forcedNewPass').value.trim();
-            const confirmP = document.getElementById('forcedConfirmPass').value.trim();
-            const msgDiv = document.getElementById('forcedPassMsg');
-            const btnSave = document.getElementById('btnForcedSave');
-
-            if (!newP || !confirmP) {
-                msgDiv.className = "text-xs font-medium text-center text-rose-600";
-                msgDiv.textContent = "Por favor completa todos los campos.";
-                msgDiv.classList.remove('hidden');
-                return;
-            }
-
-            if (newP === '123456') {
-                msgDiv.className = "text-xs font-medium text-center text-rose-600";
-                msgDiv.textContent = "La nueva contraseña no puede ser igual a la predeterminada (123456).";
-                msgDiv.classList.remove('hidden');
-                return;
-            }
-
-            if (newP !== confirmP) {
-                msgDiv.className = "text-xs font-medium text-center text-rose-600";
-                msgDiv.textContent = "Las contraseñas no coinciden.";
-                msgDiv.classList.remove('hidden');
-                return;
-            }
-
-            if (newP.length < 4) {
-                msgDiv.className = "text-xs font-medium text-center text-rose-600";
-                msgDiv.textContent = "La contraseña debe tener al menos 4 caracteres.";
-                msgDiv.classList.remove('hidden');
-                return;
-            }
-
-            btnSave.disabled = true;
-            btnSave.textContent = "Actualizando y notificando...";
-
-            const payload = {
-                usuario: permisosActuales['USUARIO'],
-                currentPass: '123456',
-                newPass: newP
-            };
-
-            fetch(appsScriptURL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(() => {
-                permisosActuales['CONTRASEÑA'] = newP;
-                permisosActuales['CONTRASENA'] = newP;
-
-                if (document.getElementById('rememberMe').checked) {
-                    localStorage.setItem('th_user', permisosActuales['USUARIO']);
-                    localStorage.setItem('th_pass', newP);
-                }
-
-                msgDiv.className = "text-xs font-medium text-center text-emerald-600";
-                msgDiv.textContent = "¡Contraseña actualizada con éxito! Ingresando...";
-                msgDiv.classList.remove('hidden');
-
-                setTimeout(() => {
-                    document.getElementById('forcedPassModal').classList.add('hidden');
-                    document.getElementById('loginScreen').classList.add('hidden');
-                    document.getElementById('mobileHeader').classList.remove('hidden');
-                    document.getElementById('mainAppContainer').classList.remove('hidden');
-                    
-                    document.getElementById('mobileSessionUser').textContent = permisosActuales['USUARIO'];
-                    document.getElementById('desktopSessionUser').textContent = `Sesión: ${permisosActuales['USUARIO']}`;
-
-                    construirNavegacionPermisos();
-                    fetchPersonalData();
-                    fetchPendData();
-                    btnSave.disabled = false;
-                    btnSave.textContent = "Cambiar Clave y Entrar 🚀";
-                }, 1500);
-            })
-            .catch(err => {
-                console.error(err);
-                msgDiv.className = "text-xs font-medium text-center text-rose-600";
-                msgDiv.textContent = "Error al conectar con el servidor.";
-                msgDiv.classList.remove('hidden');
-                btnSave.disabled = false;
-                btnSave.textContent = "Cambiar Clave y Entrar 🚀";
-            });
-        }
-
-        function abrirModalCambioPass() {
-            document.getElementById('currentPass').value = '';
-            document.getElementById('newPass').value = '';
-            document.getElementById('confirmPass').value = '';
-            document.getElementById('modalPassMsg').classList.add('hidden');
-            document.getElementById('changePassModal').classList.remove('hidden');
-        }
-
-        function cerrarModalCambioPass() {
-            document.getElementById('changePassModal').classList.add('hidden');
-        }
-
-        function toggleVisibility(inputId, eyeId) {
-            const input = document.getElementById(inputId);
-            const eye = document.getElementById(eyeId);
-            if (input.type === "password") {
-                input.type = "text";
-                eye.textContent = "🙈";
-            } else {
-                input.type = "password";
-                eye.textContent = "👁️";
-            }
-        }
-
-        function procesarCambioPass() {
-            const currentP = document.getElementById('currentPass').value.trim();
-            const newP = document.getElementById('newPass').value.trim();
-            const confirmP = document.getElementById('confirmPass').value.trim();
-            const msgDiv = document.getElementById('modalPassMsg');
-            const btnSave = document.getElementById('btnSavePass');
-
-            const passGuardadaActual = String(permisosActuales['CONTRASEÑA'] || permisosActuales['CONTRASENA'] || '').trim();
-
-            if (!currentP || !newP || !confirmP) {
-                msgDiv.className = "text-xs font-medium text-center text-rose-600";
-                msgDiv.textContent = "Por favor completa todos los campos.";
-                msgDiv.classList.remove('hidden');
-                return;
-            }
-
-            if (currentP !== passGuardadaActual) {
-                msgDiv.className = "text-xs font-medium text-center text-rose-600";
-                msgDiv.textContent = "La contraseña actual es incorrecta.";
-                msgDiv.classList.remove('hidden');
-                return;
-            }
-
-            if (newP !== confirmP) {
-                msgDiv.className = "text-xs font-medium text-center text-rose-600";
-                msgDiv.textContent = "La nueva contraseña y su confirmación no coinciden.";
-                msgDiv.classList.remove('hidden');
-                return;
-            }
-
-            if (newP.length < 4) {
-                msgDiv.className = "text-xs font-medium text-center text-rose-600";
-                msgDiv.textContent = "La nueva contraseña debe tener al menos 4 caracteres.";
-                msgDiv.classList.remove('hidden');
-                return;
-            }
-
-            btnSave.disabled = true;
-            btnSave.textContent = "Actualizando...";
-
-            const payload = {
-                usuario: permisosActuales['USUARIO'],
-                currentPass: currentP,
-                newPass: newP
-            };
-
-            fetch(appsScriptURL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(() => {
-                permisosActuales['CONTRASEÑA'] = newP;
-                permisosActuales['CONTRASENA'] = newP;
-
-                if (localStorage.getItem('th_user')) {
-                    localStorage.setItem('th_pass', newP);
-                }
-
-                msgDiv.className = "text-xs font-medium text-center text-emerald-600";
-                msgDiv.textContent = "¡Contraseña actualizada con éxito! Notificación enviada por SMS.";
-                msgDiv.classList.remove('hidden');
-
-                setTimeout(() => {
-                    cerrarModalCambioPass();
-                    btnSave.disabled = false;
-                    btnSave.textContent = "Guardar y Notificar 📲";
-                }, 2000);
-            })
-            .catch(err => {
-                console.error(err);
-                msgDiv.className = "text-xs font-medium text-center text-rose-600";
-                msgDiv.textContent = "Error al conectar con el servidor.";
-                msgDiv.classList.remove('hidden');
-                btnSave.disabled = false;
-                btnSave.textContent = "Guardar y Notificar 📲";
-            });
-        }
-
-        function construirNavegacionPermisos() {
-            const mobileNav = document.getElementById('mobileNavTabs');
-            const desktopNav = document.getElementById('desktopNavTabs');
-            mobileNav.innerHTML = '';
-            desktopNav.innerHTML = '';
-
-            let primeraTabHabilitada = null;
-
-            tabMapping.forEach(tab => {
-                let tienePermiso = false;
-                tab.possibleCols.forEach(cName => {
-                    let val1 = (permisosActuales[cName] || '').toUpperCase().trim();
-                    let cleanColName = cName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toUpperCase();
-                    let val2 = (permisosActuales[cleanColName] || '').toUpperCase().trim();
-                    if(val1 === 'SI' || val2 === 'SI') {
-                        tienePermiso = true;
-                    }
-                });
-                
-                if(tienePermiso) {
-                    if(!primeraTabHabilitada) primeraTabHabilitada = tab.id;
-
-                    let btnM = document.createElement('button');
-                    btnM.onclick = () => switchTab(tab.id);
-                    btnM.id = `btn-m-${tab.id}`;
-                    btnM.className = "whitespace-nowrap px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 font-medium text-xs transition shadow-sm flex items-center gap-2 shrink-0 border border-slate-700/50";
-                    btnM.innerHTML = `<span>${tab.icon}</span> ${tab.name}`;
-                    mobileNav.appendChild(btnM);
-
-                    let btnD = document.createElement('button');
-                    btnD.onclick = () => switchTab(tab.id);
-                    btnD.id = `btn-d-${tab.id}`;
-                    btnD.className = "w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 font-medium text-sm transition";
-                    btnD.innerHTML = `${tab.icon} ${tab.name}`;
-                    desktopNav.appendChild(btnD);
-                }
-            });
-
-            if(primeraTabHabilitada) {
-                switchTab(primeraTabHabilitada);
-            } else {
-                switchTab('dashboard');
-            }
-        }
-
-        function cerrarSesion() {
-            localStorage.removeItem('th_user');
-            localStorage.removeItem('th_pass');
-            location.reload();
-        }
-
-        function switchTab(tabName) {
-            tabMapping.forEach(t => {
-                let content = document.getElementById(`content-${t.id}`);
-                if(content) content.classList.remove('active');
-                
-                let btnD = document.getElementById(`btn-d-${t.id}`);
-                if(btnD) btnD.className = "w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 font-medium text-sm transition";
-                
-                let btnM_loop = document.getElementById(`btn-m-${t.id}`);
-                if(btnM_loop) btnM_loop.className = "whitespace-nowrap px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 font-medium text-xs transition shadow-sm flex items-center gap-2 shrink-0 border border-slate-700/50";
-            });
-
-            const activeContent = document.getElementById(`content-${tabName}`);
-            if(activeContent) activeContent.classList.add('active');
-            
-            let activeBtnD = document.getElementById(`btn-d-${tabName}`);
-            if(activeBtnD) activeBtnD.className = "w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-indigo-600 text-white font-medium text-sm transition";
-            
-            let activeBtnM = document.getElementById(`btn-m-${tabName}`);
-            if(activeBtnM) activeBtnM.className = "whitespace-nowrap px-3.5 py-2 rounded-xl bg-indigo-600 text-white font-medium text-xs transition shadow-sm flex items-center gap-2 shrink-0 border border-transparent";
-            
-            if(tabName === 'filters') {
-                applyFilters();
-            } else if(tabName === 'pendientes') {
-                renderPendientesTable();
-            }
-        }
-
-        function fetchPersonalData() {
-            const jsonpURL = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=responseHandler:handlePersonalData`;
-            const script = document.createElement('script');
-            script.src = jsonpURL;
-            script.onerror = function() {
-                document.getElementById('loadingOverlay').classList.add('hidden');
-                if(document.getElementById('syncStatus')) {
-                    document.getElementById('syncStatus').innerHTML = '<span class="text-xs bg-rose-100 text-rose-800 px-3 py-1 rounded-full font-medium">❌ Error de conexión</span>';
-                }
-            };
-            document.head.appendChild(script);
-        }
-
-        window.handlePersonalData = function(response) {
-            try {
-                if (!response || !response.table) throw new Error("Estructura no válida.");
-
-                const cols = response.table.cols.map(col => col ? (col.label || '').trim().toUpperCase() : '');
-                const rows = response.table.rows;
-
-                rawObjectsFull = rows.map(row => {
-                    let obj = {};
-                    if (row && row.c) {
-                        row.c.forEach((cell, index) => {
-                            let colName = cols[index];
-                            if (colName) {
-                                let val = cell ? (cell.f !== undefined && cell.f !== null ? cell.f : (cell.v !== undefined && cell.v !== null ? cell.v : '')) : '';
-                                obj[colName.trim().toUpperCase()] = String(val).trim();
-                            }
-                        });
-                    }
-                    return obj;
-                });
-
-                rawData = rawObjectsFull.map(item => {
-                    let cleanObj = {};
-                    for(let key in item) {
-                        let cleanKey = key.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                        cleanObj[cleanKey] = item[key];
-                    }
-                    return {
-                        original: item, 
-                        id: cleanObj["IDENTIFICACION"] || cleanObj["DOCUMENTO"] || "",
-                        name: cleanObj["NOMBRE COMPLETO"] || "",
-                        cargo: cleanObj["CARGO"] || "",
-                        area: cleanObj["AREA"] || cleanObj["DEPENDENCIA CARGO"] || "",
-                        city: cleanObj["CIUDAD"] || "",
-                        date: cleanObj["FECHA INGRESO"] || cleanObj["FECHA DE INGRESO"] || "",
-                        fechaUltimoContrato: cleanObj["FECHA ULTIMO CONTRATO"] || cleanObj["FECHA DE ULTIMO CONTRATO"] || cleanObj["ULTIMO CONTRATO"] || "",
-                        fechaRenuncia: cleanObj["FECHA RENUNCIA"] || cleanObj["FECHA DE RENUNCIA"] || "",
-                        obsRenuncia: cleanObj["OBSERVACION DE RENUNCIA"] || cleanObj["OBSERVACION RENUNCIA"] || cleanObj["OBSERVACIONES RENUNCIA"] || cleanObj["OBSERVACION"] || "",
-                        bday: cleanObj["FECHA DE NACIMIENTO"] || cleanObj["FECHA NACIMIENTO"] || cleanObj["NACIMIENTO"] || cleanObj["CUMPLEAÑOS"] || "",
-                        status: cleanObj["ACTIVO/INACTIVO"] || cleanObj["ESTADO"] || cleanObj["ACTIVO"] || "",
-                        contrato: cleanObj["TIPO CONTRATO"] || cleanObj["TIPO DE CONTRATO"] || cleanObj["CONTRATO"] || "NO ESPECIFICADO"
-                    };
-                }).filter(item => item.id !== "");
-
-                document.getElementById('loadingOverlay').classList.add('hidden');
-                if(document.getElementById('syncStatus')) {
-                    document.getElementById('syncStatus').innerHTML = `<span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-medium">● Sincronizado (${rawData.length} Registros)</span>`;
-                }
-                
-                initDropdowns();
-                updateDashboardGeneral();
-                renderListadoGeneralActivos();
-                applyFilters();
-
-                const now = new Date();
-                const y = now.getFullYear();
-                const m = String(now.getMonth() + 1).padStart(2, '0');
-                const lastDayNum = new Date(y, now.getMonth() + 1, 0).getDate();
-                const lastDayStr = String(lastDayNum).padStart(2, '0');
-                
-                const primerDiaMes = `${y}-${m}-01`;
-                const ultimoDiaMes = `${y}-${m}-${lastDayStr}`;
-
-                document.getElementById('exportStart').value = primerDiaMes;
-                document.getElementById('exportEnd').value = ultimoDiaMes;
-                document.getElementById('bDayStart').value = primerDiaMes;
-                document.getElementById('bDayEnd').value = ultimoDiaMes;
-                document.getElementById('retStart').value = primerDiaMes;
-                document.getElementById('retEnd').value = ultimoDiaMes;
-
-            } catch (error) {
-                console.error(error);
-                document.getElementById('loadingOverlay').classList.add('hidden');
-                if(document.getElementById('syncStatus')) {
-                    document.getElementById('syncStatus').innerHTML = '<span class="text-xs bg-rose-100 text-rose-800 px-3 py-1 rounded-full font-medium">❌ Error al procesar datos</span>';
-                }
-            }
-        };
-
-        function formatearFechaDDMMYYYY(fechaStr) {
-            if (!fechaStr || fechaStr === "No asignado") return fechaStr;
-            let std = parseDateStandard(fechaStr);
-            if (!std) return fechaStr;
-            let [y, m, d] = std.split('-');
-            return `${d}/${m}/${y}`;
-        }
-
-        function buscarInformacionPersonal() {
-            const query = document.getElementById('searchInfoInput').value.trim();
-            const container = document.getElementById('infoPersonalResultContainer');
-            container.innerHTML = '';
-
-            if(!query) {
-                container.innerHTML = `<div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm text-center text-rose-500 font-medium">Por favor escribe una cédula o nombre para buscar.</div>`;
-                return;
-            }
-
-            let resultados = rawData.filter(item => {
-                let matchId = item.id.toLowerCase().includes(query.toLowerCase());
-                let matchName = matchInitials(item.name, query);
-                return matchId || matchName;
-            });
-
-            if(resultados.length === 0) {
-                container.innerHTML = `<div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm text-center text-slate-400">No se encontró ningún funcionario con ese criterio de búsqueda.</div>`;
-                return;
-            }
-
-            resultados.forEach(item => {
-                let orig = item.original; 
-                let card = document.createElement('div');
-                card.className = "bg-slate-200 p-6 rounded-2xl border border-slate-300 shadow-lg space-y-3 font-sans";
-                
-                let fieldsHtml = '<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-2 text-xs">';
-                
-                for(let key in orig) {
-                    let val = orig[key] !== "" ? orig[key] : "";
-                    let upperKey = key.toUpperCase();
-                    if(upperKey.includes("FECHA") || upperKey.includes("F.") || upperKey.includes("NACE") || upperKey.includes("CUMPLE")) {
-                        val = formatearFechaDDMMYYYY(val);
-                    }
-
-                    let colSpan = "col-span-1 sm:col-span-2 md:col-span-3";
-                    if(upperKey.includes("NOMBRE") || upperKey.includes("CORREO") || upperKey.includes("OBSERVACION") || upperKey.includes("DIRECCION")) {
-                        colSpan = "col-span-1 sm:col-span-4 md:col-span-4 lg:col-span-6";
-                    } else if(upperKey.includes("DOCUMENTO") || upperKey.includes("ID") || upperKey.includes("CEDULA")) {
-                        colSpan = "col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-3";
-                    }
-
-                    fieldsHtml += `
-                        <div class="${colSpan} flex flex-col">
-                            <span class="bg-[#1e3a8a] text-white text-[10px] font-bold px-2 py-1 rounded-t-md uppercase tracking-wider border border-blue-900 truncate" title="${key}">${key}</span>
-                            <div class="bg-white text-slate-900 font-semibold px-2.5 py-1.5 rounded-b-md border border-slate-400 shadow-inner select-all truncate min-h-[30px] flex items-center" title="${val}">
-                                ${val}
-                            </div>
-                        </div>
-                    `;
-                }
-                fieldsHtml += '</div>';
-
-                card.innerHTML = fieldsHtml;
-                container.appendChild(card);
-            });
-        }
-
-        function fetchPendData() {
-            const jsonpURL = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=P_Pend&tqx=responseHandler:handlePendData`;
-            const script = document.createElement('script');
-            script.src = jsonpURL;
-            script.onerror = function() {
-                console.error("Error al cargar la hoja P_Pend");
-                const tbody = document.getElementById('pendTableBody');
-                if(tbody) tbody.innerHTML = `<tr><td colspan="2" class="px-6 py-8 text-center text-rose-500">Error al conectar con la pestaña P_Pend. Verifica que la hoja exista.</td></tr>`;
-            };
-            document.head.appendChild(script);
-        }
-
-        window.handlePendData = function(response) {
-            try {
-                if (!response || !response.table) throw new Error("Estructura no válida.");
-
-                const cols = response.table.cols.map(col => col ? (col.label || '').trim().toUpperCase() : '');
-                const rows = response.table.rows;
-
-                pendData = rows.map(row => {
-                    let obj = {};
-                    if (row && row.c) {
-                        row.c.forEach((cell, index) => {
-                            let colName = cols[index];
-                            if (colName) {
-                                let val = cell ? (cell.f !== undefined && cell.f !== null ? cell.f : (cell.v !== undefined && cell.v !== null ? cell.v : '')) : '';
-                                let cleanKey = colName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toUpperCase();
-                                obj[cleanKey] = String(val).trim();
-                            }
-                        });
-                    }
-                    return obj;
-                });
-
-                pendData = pendData.map(item => ({
-                    cargo: item["CARGO"] || "SIN CARGO",
-                    area: item["AREA"] || item["DEPENDENCIA"] || item["DEPENDENCIA CARGO"] || "SIN ÁREA",
-                    city: item["CIUDAD"] || "SIN CIUDAD"
-                })).filter(item => item.cargo !== "" || item.area !== "");
-
-                const areasSet = [...new Set(pendData.map(item => item.area).filter(Boolean))].sort();
-                const pendAreaSelect = document.getElementById('filterPendArea');
-                if(pendAreaSelect) {
-                    pendAreaSelect.innerHTML = '<option value="">Todas las Áreas</option>';
-                    areasSet.forEach(a => {
-                        let opt = document.createElement('option');
-                        opt.value = a;
-                        opt.textContent = a;
-                        pendAreaSelect.appendChild(opt);
-                    });
-                }
-
-                renderPendientesTable();
-            } catch (error) {
-                console.error("Error procesando P_Pend:", error);
-                const tbody = document.getElementById('pendTableBody');
-                if(tbody) tbody.innerHTML = `<tr><td colspan="2" class="px-6 py-8 text-center text-rose-500">Error al procesar la información de P_Pend.</td></tr>`;
-            }
-        };
-
-        function cambiarModoCiudad(conCiudad) {
-            mostrarConCiudad = conCiudad;
-            const btnSin = document.getElementById('btnModoSinCiudad');
-            const btnCon = document.getElementById('btnModoConCiudad');
-
-            if (conCiudad) {
-                btnCon.className = "px-3 py-1.5 rounded-lg transition bg-white text-slate-800 shadow-sm";
-                btnSin.className = "px-3 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900";
-            } else {
-                btnSin.className = "px-3 py-1.5 rounded-lg transition bg-white text-slate-800 shadow-sm";
-                btnCon.className = "px-3 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900";
-            }
-
-            renderPendientesTable();
-        }
-
-        function renderPendientesTable() {
-            const thead = document.getElementById('pendTableHead');
-            const tbody = document.getElementById('pendTableBody');
-            const areaFiltroVal = document.getElementById('filterPendArea').value;
-            if(!tbody || !thead) return;
-
-            thead.innerHTML = `
-                <tr>
-                    <th class="px-6 py-3.5">${mostrarConCiudad ? 'Etiquetas de fila (Cargo / Área / Ciudad)' : 'Etiquetas de fila (Área / Cargo)'}</th>
-                    <th class="px-6 py-3.5 text-right">Cuenta de CARGO (Necesidad)</th>
-                </tr>
-            `;
-            tbody.innerHTML = '';
-
-            let dataFiltrada = pendData;
-            if (areaFiltroVal !== "") {
-                dataFiltrada = pendData.filter(item => (item.area || 'SIN ÁREA').toUpperCase() === areaFiltroVal.toUpperCase());
-            }
-
-            if (dataFiltrada.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="2" class="px-6 py-8 text-center text-slate-400">No hay registros para el filtro seleccionado.</td></tr>`;
-                document.getElementById('pendTotalBadge').textContent = `Total General: 0`;
-                return;
-            }
-
-            let totalGeneral = 0;
-
-            if (!mostrarConCiudad) {
-                let agrupado = {};
-                dataFiltrada.forEach(item => {
-                    let area = (item.area || 'SIN ÁREA').toUpperCase();
-                    let cargo = (item.cargo || 'SIN CARGO').toUpperCase();
-
-                    if (!agrupado[area]) agrupado[area] = { cargos: {}, total: 0 };
-                    if (!agrupado[area].cargos[cargo]) agrupado[area].cargos[cargo] = 0;
-
-                    agrupado[area].cargos[cargo]++;
-                    agrupado[area].total++;
-                    totalGeneral++;
-                });
-
-                document.getElementById('pendTotalBadge').textContent = `Total General: ${totalGeneral}`;
-                let areasOrdenadas = Object.keys(agrupado).sort();
-
-                areasOrdenadas.forEach(area => {
-                    let trArea = document.createElement('tr');
-                    trArea.className = "bg-slate-100 font-bold text-slate-900 border-b border-slate-200 select-none";
-                    trArea.innerHTML = `
-                        <td class="px-6 py-3 flex items-center gap-2"><span class="text-indigo-600">⊟</span> ${area}</td>
-                        <td class="px-6 py-3 text-right font-bold text-slate-900">${agrupado[area].total}</td>
-                    `;
-                    tbody.appendChild(trArea);
-
-                    let cargosOrdenados = Object.keys(agrupado[area].cargos).sort();
-                    cargosOrdenados.forEach(cargo => {
-                        let count = agrupado[area].cargos[cargo];
-                        let trCargo = document.createElement('tr');
-                        trCargo.className = "hover:bg-slate-50 transition border-b border-slate-100 text-slate-700";
-                        trCargo.innerHTML = `
-                            <td class="px-6 py-2.5 pl-12 text-slate-600 font-medium">↳ ${cargo}</td>
-                            <td class="px-6 py-2.5 text-right font-semibold text-slate-800">${count}</td>
-                        `;
-                        tbody.appendChild(trCargo);
-                    });
-                });
-
-            } else {
-                let agrupado = {};
-                dataFiltrada.forEach(item => {
-                    let cargo = (item.cargo || 'SIN CARGO').toUpperCase();
-                    let area = (item.area || 'SIN ÁREA').toUpperCase();
-                    let city = (item.city || 'SIN CIUDAD').toUpperCase();
-
-                    if (!agrupado[cargo]) agrupado[cargo] = { areas: {}, total: 0 };
-                    if (!agrupado[cargo].areas[area]) agrupado[cargo].areas[area] = { cities: {}, total: 0 };
-                    if (!agrupado[cargo].areas[area].cities[city]) agrupado[cargo].areas[area].cities[city] = 0;
-
-                    agrupado[cargo].areas[area].cities[city]++;
-                    agrupado[cargo].areas[area].total++;
-                    agrupado[cargo].total++;
-                    totalGeneral++;
-                });
-
-                document.getElementById('pendTotalBadge').textContent = `Total General: ${totalGeneral}`;
-                let cargosOrdenados = Object.keys(agrupado).sort();
-
-                cargosOrdenados.forEach(cargo => {
-                    let trCargo = document.createElement('tr');
-                    trCargo.className = "bg-slate-100 font-bold text-slate-900 border-b border-slate-200 select-none";
-                    trCargo.innerHTML = `
-                        <td class="px-6 py-3 flex items-center gap-2"><span class="text-indigo-600">⊟</span> ${cargo}</td>
-                        <td class="px-6 py-3 text-right font-bold text-slate-900">${agrupado[cargo].total}</td>
-                    `;
-                    tbody.appendChild(trCargo);
-
-                    let areasOrdenadas = Object.keys(agrupado[cargo].areas).sort();
-                    areasOrdenadas.forEach(area => {
-                        let trArea = document.createElement('tr');
-                        trArea.className = "bg-slate-50/80 font-semibold text-slate-800 border-b border-slate-100";
-                        trArea.innerHTML = `
-                            <td class="px-6 py-2.5 pl-10 flex items-center gap-1.5 text-slate-700"><span class="text-slate-400">↳</span> ${area}</td>
-                            <td class="px-6 py-2.5 text-right font-semibold text-slate-800">${agrupado[cargo].areas[area].total}</td>
-                        `;
-                        tbody.appendChild(trArea);
-
-                        let citiesOrdenadas = Object.keys(agrupado[cargo].areas[area].cities).sort();
-                        citiesOrdenadas.forEach(city => {
-                            let count = agrupado[cargo].areas[area].cities[city];
-                            let trCity = document.createElement('tr');
-                            trCity.className = "hover:bg-slate-50 transition border-b border-slate-100 text-slate-600";
-                            trCity.innerHTML = `
-                                <td class="px-6 py-2 pl-16 text-slate-500 text-[11px]">${city}</td>
-                                <td class="px-6 py-2 text-right font-medium text-slate-700">${count}</td>
-                            `;
-                            tbody.appendChild(trCity);
-                        });
-                    });
-                });
-            }
-        }
-
-        function exportarPendientesExcel() {
-            const areaFiltroVal = document.getElementById('filterPendArea').value;
-            let dataFiltrada = pendData;
-            if (areaFiltroVal !== "") {
-                dataFiltrada = pendData.filter(item => (item.area || 'SIN ÁREA').toUpperCase() === areaFiltroVal.toUpperCase());
-            }
-
-            if (dataFiltrada.length === 0) {
-                alert("No hay datos para exportar.");
-                return;
-            }
-
-            let dataToExport = [];
-            let totalGeneral = 0;
-
-            if (!mostrarConCiudad) {
-                let agrupado = {};
-                dataFiltrada.forEach(item => {
-                    let area = (item.area || 'SIN ÁREA').toUpperCase();
-                    let cargo = (item.cargo || 'SIN CARGO').toUpperCase();
-                    if (!agrupado[area]) agrupado[area] = { cargos: {}, total: 0 };
-                    if (!agrupado[area].cargos[cargo]) agrupado[area].cargos[cargo] = 0;
-                    agrupado[area].cargos[cargo]++;
-                    agrupado[area].total++;
-                    totalGeneral++;
-                });
-
-                dataToExport.push({ "ETIQUETAS DE FILA (ÁREA / CARGO)": "ETIQUETAS DE FILA (ÁREA / CARGO)", "CUENTA DE CARGO (NECESIDAD)": "CUENTA DE CARGO (NECESIDAD)" });
-                let areasOrdenadas = Object.keys(agrupado).sort();
-                areasOrdenadas.forEach(area => {
-                    dataToExport.push({ "ETIQUETAS DE FILA (ÁREA / CARGO)": area, "CUENTA DE CARGO (NECESIDAD)": agrupado[area].total });
-                    let cargosOrdenados = Object.keys(agrupado[area].cargos).sort();
-                    cargosOrdenados.forEach(cargo => {
-                        dataToExport.push({ "ETIQUETAS DE FILA (ÁREA / CARGO)": `    ${cargo}`, "CUENTA DE CARGO (NECESIDAD)": agrupado[area].cargos[cargo] });
-                    });
-                });
-            } else {
-                let agrupado = {};
-                dataFiltrada.forEach(item => {
-                    let cargo = (item.cargo || 'SIN CARGO').toUpperCase();
-                    let area = (item.area || 'SIN ÁREA').toUpperCase();
-                    let city = (item.city || 'SIN CIUDAD').toUpperCase();
-                    if (!agrupado[cargo]) agrupado[cargo] = { areas: {}, total: 0 };
-                    if (!agrupado[cargo].areas[area]) agrupado[cargo].areas[area] = { cities: {}, total: 0 };
-                    if (!agrupado[cargo].areas[area].cities[city]) agrupado[cargo].areas[area].cities[city] = 0;
-                    agrupado[cargo].areas[area].cities[city]++;
-                    agrupado[cargo].areas[area].total++;
-                    agrupado[cargo].total++;
-                    totalGeneral++;
-                });
-
-                dataToExport.push({ "ETIQUETAS DE FILA (CARGO / ÁREA / CIUDAD)": "ETIQUETAS DE FILA (CARGO / ÁREA / CIUDAD)", "CUENTA DE CARGO (NECESIDAD)": "CUENTA DE CARGO (NECESIDAD)" });
-                let cargosOrdenados = Object.keys(agrupado).sort();
-                cargosOrdenados.forEach(cargo => {
-                    dataToExport.push({ "ETIQUETAS DE FILA (CARGO / ÁREA / CIUDAD)": cargo, "CUENTA DE CARGO (NECESIDAD)": agrupado[cargo].total });
-                    let areasOrdenadas = Object.keys(agrupado[cargo].areas).sort();
-                    areasOrdenadas.forEach(area => {
-                        dataToExport.push({ "ETIQUETAS DE FILA (CARGO / ÁREA / CIUDAD)": `    ${area}`, "CUENTA DE CARGO (NECESIDAD)": agrupado[cargo].areas[area].total });
-                        let citiesOrdenadas = Object.keys(agrupado[cargo].areas[area].cities).sort();
-                        citiesOrdenadas.forEach(city => {
-                            dataToExport.push({ "ETIQUETAS DE FILA (CARGO / ÁREA / CIUDAD)": `        ${city}`, "CUENTA DE CARGO (NECESIDAD)": agrupado[cargo].areas[area].cities[city] });
-                        });
-                    });
-                });
-            }
-
-            dataToExport.push({ [Object.keys(dataToExport[0])[0]]: "Total general", [Object.keys(dataToExport[0])[1]]: totalGeneral });
-
-            exportarExcelProfesional(dataToExport, mostrarConCiudad ? 'Informe_Personal_Pendiente_Con_Ciudad.xlsx' : 'Informe_Personal_Pendiente_Sin_Ciudad.xlsx');
-        }
-
-        function buscarRetiros() {
-            const startStr = document.getElementById('retStart').value;
-            const endStr = document.getElementById('retEnd').value;
-            const tbody = document.getElementById('retTableBody');
-            tbody.innerHTML = '';
-
-            if(!startStr || !endStr) {
-                alert("Selecciona un rango de fechas de retiro válido.");
-                return;
-            }
-
-            const startDate = new Date(startStr);
-            const endDate = new Date(endStr);
-
-            currentRetFiltered = rawData.filter(item => {
-                if(!item.fechaRenuncia) return false;
-                let std = parseDateStandard(item.fechaRenuncia);
-                if(!std) return false;
-                let itemDate = new Date(std);
-                return itemDate >= startDate && itemDate <= endDate;
-            });
-
-            currentRetFiltered.sort((a, b) => {
-                let stdA = parseDateStandard(a.fechaRenuncia);
-                let stdB = parseDateStandard(b.fechaRenuncia);
-                return new Date(stdA) - new Date(stdB);
-            });
-
-            document.getElementById('retCount').textContent = `${currentRetFiltered.length} registros encontrados`;
-
-            if(currentRetFiltered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="px-6 py-6 text-center text-slate-400">No se encontraron retiros en este rango de fechas.</td></tr>`;
-                return;
-            }
-
-            currentRetFiltered.forEach(item => {
-                let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
-                let displayIngreso = item.date ? formatearFechaDDMMYYYY(item.date) : 'N/A';
-                let displayRetiro = item.fechaRenuncia ? formatearFechaDDMMYYYY(item.fechaRenuncia) : 'N/A';
-
-                tr.innerHTML = `
-                    <td class="px-6 py-3 font-medium text-slate-900">${item.id}</td>
-                    <td class="px-6 py-3 font-semibold text-slate-800">${item.name}</td>
-                    <td class="px-6 py-3 text-slate-600">${item.cargo || 'N/A'}</td>
-                    <td class="px-6 py-3"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium">${item.area || 'N/A'}</span></td>
-                    <td class="px-6 py-3 text-slate-600">${item.city || 'N/A'}</td>
-                    <td class="px-6 py-3 text-slate-600 whitespace-nowrap">${displayIngreso}</td>
-                    <td class="px-6 py-3 text-rose-600 font-semibold whitespace-nowrap">${displayRetiro}</td>
-                    <td class="px-6 py-3 text-slate-600">${item.obsRenuncia || 'N/A'}</td>
-                    <td class="px-6 py-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide bg-rose-50 text-rose-700">${item.status || 'RETIRADO'}</span></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function exportarRetirosExcel() {
-            if(currentRetFiltered.length === 0) {
-                alert("No hay datos de retiros para exportar.");
-                return;
-            }
-            let dataToExport = currentRetFiltered.map(item => ({
-                "DOCUMENTO": item.id,
-                "NOMBRE COMPLETO": item.name,
-                "CARGO": item.cargo,
-                "ÁREA": item.area,
-                "CIUDAD": item.city,
-                "FECHA INGRESO": item.date ? formatearFechaDDMMYYYY(item.date) : '',
-                "FECHA RENUNCIA (RETIRO)": item.fechaRenuncia ? formatearFechaDDMMYYYY(item.fechaRenuncia) : '',
-                "OBSERVACIÓN RENUNCIA": item.obsRenuncia,
-                "ESTADO": item.status
-            }));
-            exportarExcelProfesional(dataToExport, 'Reporte_Retiros.xlsx');
-        }
-
-        function initDropdowns() {
-            const areas = [...new Set(rawData.map(item => item.area).filter(Boolean))].sort();
-            const cargos = [...new Set(rawData.map(item => item.cargo).filter(Boolean))].sort();
-
-            const areaSelect = document.getElementById('filterArea');
-            const exportAreaSelect = document.getElementById('exportArea');
-            const dashboardAreaSelect = document.getElementById('selectAreaDashboard');
-
-            areas.forEach(a => {
-                let opt1 = document.createElement('option'); opt1.value = a; opt1.textContent = a;
-                areaSelect.appendChild(opt1);
-                let opt2 = document.createElement('option'); opt2.value = a; opt2.textContent = a;
-                exportAreaSelect.appendChild(opt2);
-                let opt3 = document.createElement('option'); opt3.value = a; opt3.textContent = a;
-                dashboardAreaSelect.appendChild(opt3);
-            });
-
-            const cargoSelect = document.getElementById('filterCargo');
-            const exportCargoSelect = document.getElementById('exportCargo');
-            cargos.forEach(c => {
-                let opt1 = document.createElement('option'); opt1.value = c; opt1.textContent = c;
-                cargoSelect.appendChild(opt1);
-                let opt2 = document.createElement('option'); opt2.value = c; opt2.textContent = c;
-                exportCargoSelect.appendChild(opt2);
-            });
-        }
-
-        function parseDateStandard(dateStr) {
-            if (!dateStr) return null;
-            let dPart = String(dateStr).split(' ')[0].trim();
-            if (dPart.includes('-')) {
-                let p = dPart.split('-');
-                if (p[0].length === 4) return dPart;
-                return `${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`;
-            } else if (dPart.includes('/')) {
-                let p = dPart.split('/');
-                if (p[2].length === 4) return `${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`;
-                else if (p[0].length === 4) return `${p[0]}-${p[1].padStart(2,'0')}-${p[2].padStart(2,'0')}`;
-            }
-            else if (!isNaN(dPart) && dPart !== "") {
-                let excelDate = new Date((dPart - (25567 + 2))*86400*1000);
-                let y = excelDate.getUTCFullYear();
-                let m = String(excelDate.getUTCMonth() + 1).padStart(2, '0');
-                let d = String(excelDate.getUTCDate()).padStart(2, '0');
-                return `${y}-${m}-${d}`;
-            }
-            return null;
-        }
-
-        function updateDashboardGeneral() {
-            document.getElementById('kpiTotal').textContent = rawData.length;
-            const personalActivo = rawData.filter(i => i.status.toUpperCase() === 'ACTIVO');
-            document.getElementById('kpiActivos').textContent = personalActivo.length;
-            
-            const now = new Date();
-            const year = now.getFullYear();
-            const monthNum = now.getMonth() + 1;
-            const monthStr = String(monthNum).padStart(2, '0');
-            const yearMonthStr = `${year}-${monthStr}`;
-            const currentDayTime = now.setHours(0,0,0,0);
-
-            const nombresMeses = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];
-            document.getElementById('labelMesVigente').textContent = `${nombresMeses[monthNum - 1]} ${year} (HASTA HOY)`;
-            
-            let ingresosMesList = rawData.filter(i => {
-                if (!i.date) return false;
-                let d = parseDateStandard(i.date);
-                if (!d || !d.startsWith(yearMonthStr)) return false;
-                
-                let itemDate = new Date(d).setHours(0,0,0,0);
-                return itemDate <= currentDayTime;
-            });
-
-            document.getElementById('kpiIngresosMes').textContent = ingresosMesList.length;
-
-            let ingresosPorDiaMes = {};
-            ingresosMesList.forEach(i => {
-                let d = parseDateStandard(i.date);
-                if (d) {
-                    ingresosPorDiaMes[d] = (ingresosPorDiaMes[d] || 0) + 1;
-                }
-            });
-
-            let diasOrdenados = Object.keys(ingresosPorDiaMes).sort();
-            let valoresDiasMes = diasOrdenados.map(f => ingresosPorDiaMes[f]);
-
-            renderLineChart('chartEvolucionIngresosMes', diasOrdenados, valoresDiasMes, chartEvolucionMesInstance, (inst) => chartEvolucionMesInstance = inst);
-
-            let cargosMesCount = {};
-            ingresosMesList.forEach(i => {
-                let c = i.cargo || 'SIN CARGO';
-                cargosMesCount[c] = (cargosMesCount[c] || 0) + 1;
-            });
-
-            let sortedCargosMes = Object.entries(cargosMesCount).sort((a, b) => b[1] - a[1]).slice(0, 6);
-            let topCargosLabels = sortedCargosMes.map(item => item[0]);
-            let topCargosValues = sortedCargosMes.map(item => item[1]);
-
-            renderBarChart('chartCargosMes', topCargosLabels, topCargosValues, chartCargosMesInstance, (inst) => chartCargosMesInstance = inst);
-
-            let contratoActivoCount = {};
-            personalActivo.forEach(i => {
-                let tipo = (i.contrato && i.contrato.trim() !== "") ? i.contrato.trim().toUpperCase() : 'NO ESPECIFICADO';
-                contratoActivoCount[tipo] = (contratoActivoCount[tipo] || 0) + 1;
-            });
-
-            let sortedContratos = Object.entries(contratoActivoCount).sort((a, b) => b[1] - a[1]);
-            let contratoLabels = sortedContratos.map(item => item[0]);
-            let contratoValues = sortedContratos.map(item => item[1]);
-
-            renderDoughnutChart('chartTipoContratoActivo', contratoLabels, contratoValues, chartTipoContratoInstance, (inst) => chartTipoContratoInstance = inst);
-
-            actualizarGraficoCargosPorArea();
-        }
-
-        function actualizarGraficoCargosPorArea() {
-            const areaSeleccionada = document.getElementById('selectAreaDashboard').value;
-            const personalActivo = rawData.filter(i => i.status.toUpperCase() === 'ACTIVO');
-
-            let personalFiltrado = personalActivo;
-            if (areaSeleccionada !== "") {
-                personalFiltrado = personalActivo.filter(i => i.area === areaSeleccionada);
-            }
-
-            let cargosAreaCount = {};
-            personalFiltrado.forEach(i => {
-                let c = (i.cargo && i.cargo.trim() !== "") ? i.cargo.trim().toUpperCase() : 'SIN CARGO';
-                cargosAreaCount[c] = (cargosAreaCount[c] || 0) + 1;
-            });
-
-            let sortedCargosArea = Object.entries(cargosAreaCount).sort((a, b) => b[1] - a[1]).slice(0, 8);
-            let labels = sortedCargosArea.map(item => item[0]);
-            let values = sortedCargosArea.map(item => item[1]);
-
-            renderBarChartCargosArea('chartCargosPorArea', labels, values);
-        }
-
-        function renderLineChart(canvasId, labels, dataVals, instance, setInstance) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            if (instance) instance.destroy();
-
-            let newInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Ingresos Diarios',
-                        data: dataVals,
-                        borderColor: '#4361ee',
-                        backgroundColor: 'rgba(67, 97, 238, 0.1)',
-                        borderWidth: 2.5,
-                        fill: true,
-                        tension: 0.3,
-                        pointRadius: 4,
-                        pointBackgroundColor: '#4361ee'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
-                        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 }, precision: 0 } }
-                    }
-                }
-            });
-            setInstance(newInstance);
-        }
-
-        function renderBarChart(canvasId, labels, dataVals, instance, setInstance) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            if (instance) instance.destroy();
-
-            let newInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Nuevos Ingresos',
-                        data: dataVals,
-                        backgroundColor: ['#4361ee', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'],
-                        borderRadius: 6,
-                        barThickness: 'flex'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 20 } },
-                        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 }, precision: 0 } }
-                    }
-                }
-            });
-            setInstance(newInstance);
-        }
-
-        function renderBarChartCargosArea(canvasId, labels, dataVals) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            if (chartCargosPorAreaInstance) chartCargosPorAreaInstance.destroy();
-
-            chartCargosPorAreaInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Cantidad',
-                        data: dataVals,
-                        backgroundColor: ['#10b981', '#4361ee', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4', '#ec4899', '#84cc16'],
-                        borderRadius: 6,
-                        barThickness: 'flex'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 25 } },
-                        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 }, precision: 0 } }
-                    }
-                }
-            });
-        }
-
-        function renderDoughnutChart(canvasId, labels, dataVals, instance, setInstance) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            if (instance) instance.destroy();
-
-            let newInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: dataVals,
-                        backgroundColor: ['#4361ee', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'],
-                        borderWidth: 2,
-                        borderColor: '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { font: { size: 11 }, boxWidth: 12 }
-                        }
-                    },
-                    cutout: '55%'
-                }
-            });
-            setInstance(newInstance);
-        }
-
-        function matchInitials(fullName, query) {
-            if (!query) return true;
-            const cleanQuery = query.toLowerCase().trim().replace(/\s+/g, ' ');
-            const cleanName = fullName.toLowerCase();
-            if (cleanName.includes(cleanQuery)) return true;
-
-            const queryParts = cleanQuery.split(' ');
-            const nameWords = cleanName.split(' ');
-            let wordIndex = 0;
-            for (let qPart of queryParts) {
-                let found = false;
-                while (wordIndex < nameWords.length) {
-                    if (nameWords[wordIndex].startsWith(qPart)) {
-                        found = true;
-                        wordIndex++;
-                        break;
-                    }
-                    wordIndex++;
-                }
-                if (!found) return false;
-            }
-            return true;
-        }
-
-        function applyFilters() {
-            const docVal = document.getElementById('filterDoc').value.toLowerCase().trim();
-            const nameVal = document.getElementById('filterName').value;
-            const areaVal = document.getElementById('filterArea').value;
-            const cargoVal = document.getElementById('filterCargo').value;
-
-            currentDynamicFiltered = rawData.filter(item => {
-                const matchDoc = docVal === '' || item.id.toLowerCase().includes(docVal);
-                const matchName = matchInitials(item.name, nameVal);
-                const matchArea = areaVal === '' || item.area === areaVal;
-                const matchCargo = cargoVal === '' || item.cargo === cargoVal;
-                return matchDoc && matchName && matchArea && matchCargo;
-            });
-
-            renderDynamicTable(currentDynamicFiltered);
-        }
-
-        function resetFilters() {
-            document.getElementById('filterDoc').value = '';
-            document.getElementById('filterName').value = '';
-            document.getElementById('filterArea').value = '';
-            document.getElementById('filterCargo').value = '';
-            applyFilters();
-        }
-
-        function renderDynamicTable(data) {
-            const tbody = document.getElementById('dynamicTableBody');
-            tbody.innerHTML = '';
-            document.getElementById('dynamicCount').textContent = `Mostrando ${data.length} de ${rawData.length} registros`;
-
-            if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" class="px-6 py-8 text-center text-slate-400">No se encontraron registros.</td></tr>`;
-                return;
-            }
-
-            const limit = data.length > 300 ? 300 : data.length;
-            for (let i = 0; i < limit; i++) {
-                let item = data[i];
-                let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
-                let displayDate = item.date ? formatearFechaDDMMYYYY(item.date) : 'N/A';
-                let displayUltContrato = item.fechaUltimoContrato ? formatearFechaDDMMYYYY(item.fechaUltimoContrato) : 'N/A';
-                let displayRenuncia = item.fechaRenuncia ? formatearFechaDDMMYYYY(item.fechaRenuncia) : 'N/A';
-
-                tr.innerHTML = `
-                    <td class="px-6 py-3 font-medium text-slate-900">${item.id}</td>
-                    <td class="px-6 py-3 font-semibold text-slate-800">${item.name}</td>
-                    <td class="px-6 py-3 text-slate-600">${item.cargo}</td>
-                    <td class="px-6 py-3"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium">${item.area || 'N/A'}</span></td>
-                    <td class="px-6 py-3 text-slate-600">${item.city || 'N/A'}</td>
-                    <td class="px-6 py-3 text-slate-600 whitespace-nowrap">${displayDate}</td>
-                    <td class="px-6 py-3 text-slate-600 whitespace-nowrap">${displayUltContrato}</td>
-                    <td class="px-6 py-3 text-slate-600 whitespace-nowrap">${displayRenuncia}</td>
-                    <td class="px-6 py-3 text-slate-600">${item.obsRenuncia || 'N/A'}</td>
-                    <td class="px-6 py-3">
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide ${item.status.toUpperCase() === 'ACTIVO' ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-600'}">
-                            ${item.status || 'N/D'}
-                        </span>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            }
-        }
-
-        function exportFilteredData(format) {
-            if (currentDynamicFiltered.length === 0) {
-                alert("No hay datos filtrados para exportar.");
-                return;
-            }
-
-            if (format === 'pdf') {
-                window.print();
-            } else if (format === 'excel') {
-                let dataToExport = currentDynamicFiltered.map(item => ({
-                    "DOCUMENTO": item.id,
-                    "NOMBRE COMPLETO": item.name,
-                    "CARGO": item.cargo,
-                    "ÁREA": item.area,
-                    "CIUDAD": item.city,
-                    "FECHA INGRESO": item.date ? formatearFechaDDMMYYYY(item.date) : '',
-                    "FECHA ÚLTIMO CONTRATO": item.fechaUltimoContrato ? formatearFechaDDMMYYYY(item.fechaUltimoContrato) : '',
-                    "FECHA RENUNCIA": item.fechaRenuncia ? formatearFechaDDMMYYYY(item.fechaRenuncia) : '',
-                    "OBSERVACIÓN RENUNCIA": item.obsRenuncia,
-                    "ESTADO": item.status
-                }));
-                exportarExcelProfesional(dataToExport, 'Reporte_Filtro_Personal.xlsx');
-            } else if (format === 'word') {
-                let htmlContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                <head><meta charset='utf-8'><title>Reporte Word</title></head><body>
-                <h2>Reporte de Colaboradores</h2>
-                <table border='1' cellspacing='0' cellpadding='5'>
-                <tr style='background:#f2f2f2;'><th>Documento</th><th>Nombre</th><th>Cargo</th><th>Área</th><th>Ciudad</th><th>Ingreso</th><th>Último Contrato</th><th>Fecha Renuncia</th><th>Obs. Renuncia</th><th>Estado</th></tr>`;
-                currentDynamicFiltered.forEach(item => {
-                    htmlContent += `<tr><td>${item.id}</td><td>${item.name}</td><td>${item.cargo}</td><td>${item.area}</td><td>${item.city}</td><td>${item.date ? formatearFechaDDMMYYYY(item.date) : ''}</td><td>${item.fechaUltimoContrato ? formatearFechaDDMMYYYY(item.fechaUltimoContrato) : ''}</td><td>${item.fechaRenuncia ? formatearFechaDDMMYYYY(item.fechaRenuncia) : ''}</td><td>${item.obsRenuncia}</td><td>${item.status}</td></tr>`;
-                });
-                htmlContent += `</table></body></html>`;
-
-                let blob = new Blob(['\ufeff' + htmlContent], { type: 'application/msword' });
-                let url = URL.createObjectURL(blob);
-                let a = document.createElement('a');
-                a.href = url;
-                a.download = 'Reporte.doc';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            }
-        }
-
-        function buscarCumpleanos() {
-            const startStr = document.getElementById('bDayStart').value; 
-            const endStr = document.getElementById('bDayEnd').value;
-            const tbody = document.getElementById('bDayTableBody');
-            tbody.innerHTML = '';
-
-            if(!startStr || !endStr) {
-                alert("Selecciona un rango de fechas válido.");
-                return;
-            }
-
-            let [, startM, startD] = startStr.split('-');
-            let [, endM, endD] = endStr.split('-');
-            let startVal = parseInt(startM + startD, 10);
-            let endVal = parseInt(endM + endD, 10);
-            let currentYear = new Date().getFullYear();
-
-            currentBDayFiltered = rawData.filter(item => {
-                if(!item.bday) return false;
-                let std = parseDateStandard(item.bday);
-                if(!std) return false;
-                let [, m, d] = std.split('-');
-                let itemVal = parseInt(m + d, 10);
-                return itemVal >= startVal && itemVal <= endVal;
-            });
-
-            currentBDayFiltered.sort((a, b) => {
-                let stdA = parseDateStandard(a.bday);
-                let stdB = parseDateStandard(b.bday);
-                let [, mA, dA] = stdA.split('-');
-                let [, mB, dB] = stdB.split('-');
-                return parseInt(mA + dA, 10) - parseInt(mB + dB, 10);
-            });
-
-            if(currentBDayFiltered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-6 text-center text-slate-400">No se encontraron cumpleaños.</td></tr>`;
-                return;
-            }
-
-            currentBDayFiltered.forEach(item => {
-                let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
-                let std = parseDateStandard(item.bday);
-                let [, m, d] = std.split('-');
-                let fechaCumpleanosActual = `${d}/${m}/${currentYear}`;
-
-                tr.innerHTML = `
-                    <td class="px-6 py-3 font-semibold text-slate-800">${item.name}</td>
-                    <td class="px-6 py-3 text-slate-600">${fechaCumpleanosActual}</td>
-                    <td class="px-6 py-3 text-slate-600">${item.cargo || 'N/A'}</td>
-                    <td class="px-6 py-3 text-slate-600"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium">${item.area || 'N/A'}</span></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function exportarCumpleanosExcel() {
-            if(currentBDayFiltered.length === 0) {
-                alert("No hay datos para exportar.");
-                return;
-            }
-            let currentYear = new Date().getFullYear();
-            let dataToExport = currentBDayFiltered.map(item => {
-                let std = parseDateStandard(item.bday);
-                let [, m, d] = std.split('-');
-                return {
-                    "NOMBRE COMPLETO": item.name,
-                    "FECHA CUMPLEAÑOS": `${d}/${m}/${currentYear}`,
-                    "CARGO": item.cargo,
-                    "ÁREA": item.area
-                };
-            });
-            exportarExcelProfesional(dataToExport, 'Cumpleanos.xlsx');
-        }
-
-        function renderListadoGeneralActivos() {
-            const activos = rawData.filter(i => i.status.toUpperCase() === 'ACTIVO');
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
-            document.getElementById('tableCount').textContent = `Mostrando ${activos.length} activos`;
-
-            if (activos.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-slate-400">No hay personal activo.</td></tr>`;
-                return;
-            }
-
-            const limit = activos.length > 300 ? 300 : activos.length;
-            for (let i = 0; i < limit; i++) {
-                let item = activos[i];
-                let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
-                let displayDate = item.date ? formatearFechaDDMMYYYY(item.date) : 'N/A';
-                tr.innerHTML = `
-                    <td class="px-6 py-3 font-medium text-slate-900">${item.id}</td>
-                    <td class="px-6 py-3 font-semibold text-slate-800">${item.name}</td>
-                    <td class="px-6 py-3 text-slate-600">${item.cargo}</td>
-                    <td class="px-6 py-3"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium">${item.area || 'N/A'}</span></td>
-                    <td class="px-6 py-3 text-slate-600">${item.city || 'N/A'}</td>
-                    <td class="px-6 py-3 text-slate-600 whitespace-nowrap">${displayDate}</td>
-                    <td class="px-6 py-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide bg-emerald-50 text-emerald-700">${item.status}</span></td>
-                `;
-                tbody.appendChild(tr);
-            }
-        }
-
-        function exportarListadoGeneralExcel() {
-            const activos = rawData.filter(i => i.status.toUpperCase() === 'ACTIVO');
-            let dataToExport = activos.map(item => ({
-                "DOCUMENTO": item.id,
-                "NOMBRE COMPLETO": item.name,
-                "CARGO": item.cargo,
-                "ÁREA": item.area,
-                "CIUDAD": item.city,
-                "FECHA INGRESO": item.date ? formatearFechaDDMMYYYY(item.date) : '',
-                "ESTADO": item.status
-            }));
-            exportarExcelProfesional(dataToExport, 'Listado_General.xlsx');
-        }
-
-        function previsualizarExportacion() {
-            const startStr = document.getElementById('exportStart').value;
-            const endStr = document.getElementById('exportEnd').value;
-            const areaVal = document.getElementById('exportArea').value;
-            const cargoVal = document.getElementById('exportCargo').value;
-            
-            const statusDiv = document.getElementById('exportStatus');
-            const tbody = document.getElementById('previewTableBody');
-            const btnExport = document.getElementById('btnRealizarExport');
-            tbody.innerHTML = '';
-
-            if (!startStr || !endStr) {
-                statusDiv.innerHTML = '<span class="text-rose-600">⚠️ Selecciona las fechas.</span>';
-                return;
-            }
-
-            const startDate = new Date(startStr);
-            const endDate = new Date(endStr);
-
-            currentExportFiltered = rawData.filter(item => {
-                let std = parseDateStandard(item.date);
-                if (!std) return false;
-                let itemDate = new Date(std);
-                return itemDate >= startDate && itemDate <= endDate && (areaVal === '' || item.area === areaVal) && (cargoVal === '' || item.cargo === cargoVal);
-            });
-
-            document.getElementById('previewCount').textContent = `${currentExportFiltered.length} registros`;
-
-            if (currentExportFiltered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-6 text-center text-slate-400">Sin registros.</td></tr>`;
-                btnExport.disabled = true;
-                btnExport.classList.add('opacity-50', 'cursor-not-allowed');
-                return;
-            }
-
-            currentExportFiltered.forEach(item => {
-                let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
-                tr.innerHTML = `
-                    <td class="px-4 py-2 font-medium text-slate-900">${item.id}</td>
-                    <td class="px-4 py-2 font-semibold text-slate-800">${item.name}</td>
-                    <td class="px-4 py-2 text-slate-600">${item.cargo}</td>
-                    <td class="px-4 py-2">${item.area || 'N/A'}</td>
-                    <td class="px-4 py-2">${item.city || 'N/A'}</td>
-                    <td class="px-4 py-2">${item.date ? formatearFechaDDMMYYYY(item.date) : 'N/A'}</td>
-                    <td class="px-4 py-2">${item.status}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            btnExport.disabled = false;
-            btnExport.classList.remove('opacity-50', 'cursor-not-allowed');
-            statusDiv.innerHTML = '<span class="text-emerald-600">✅ Vista previa cargada.</span>';
-        }
-
-        function ejecutarExportacionCSV() {
-            if (currentExportFiltered.length === 0) return;
-            let dataToExport = currentExportFiltered.map(item => ({
-                "DOCUMENTO": item.id,
-                "NOMBRE COMPLETO": item.name,
-                "CARGO": item.cargo,
-                "ÁREA": item.area,
-                "CIUDAD": item.city,
-                "FECHA INGRESO": item.date ? formatearFechaDDMMYYYY(item.date) : '',
-                "ESTADO": item.status
-            }));
-            exportarExcelProfesional(dataToExport, 'Reporte_Contratacion.xlsx');
-        }
-
-        function exportarExcelProfesional(dataArray, filename) {
-            const worksheet = XLSX.utils.json_to_sheet(dataArray);
-
-            const colWidths = [];
-            const range = XLSX.utils.decode_range(worksheet['!ref']);
-            
-            for (let C = range.s.c; C <= range.e.c; ++C) {
-                let maxWidth = 10;
-                for (let R = range.s.r; R <= range.e.r; ++R) {
-                    const cellAddress = XLSX.utils.encode_cell({ c: C, r: R });
-                    const cell = worksheet[cellAddress];
-                    if (cell && cell.v != null) {
-                        const cellLength = String(cell.v).length;
-                        if (cellLength > maxWidth) maxWidth = cellLength;
-
-                        if (!cell.s) cell.s = {};
-                        cell.s.alignment = { wrapText: true, vertical: "center" };
-                    }
-                }
-                colWidths[C] = { wch: Math.min(Math.max(maxWidth + 3, 12), 45) };
-            }
-            worksheet['!cols'] = colWidths;
-
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Reporte");
-            XLSX.writeFile(workbook, filename);
-        }
-    </script>
+    <!-- Script modularizado -->
+    <script src="app.js"></script>
 </body>
 </html>
