@@ -114,6 +114,7 @@ function intentarLogin(isAuto = false) {
 
             if (passActualEnHoja === '123456') {
                 document.getElementById('loadingOverlay').classList.add('hidden');
+                document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('forcedPassModal').classList.remove('hidden');
                 return;
             }
